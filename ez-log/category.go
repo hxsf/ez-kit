@@ -33,6 +33,12 @@ func (p *Category) ByteLength() int {
 func (p *Category) serializeToBuffer(buffer *ez_buffer.Buffer) {
 	l := len(p.Category) + len(p.SubCategory) + len(p.Module) + len(p.Filter1) + len(p.Filter2) + AdditionalSize
 	buffer.Prealloc(l)
+
+	buffer.AppendByte(LeftSep)
+	buffer.AppendString(p.Module)
+	buffer.AppendByte(RightSep)
+	buffer.AppendByte(SpaceSep)
+
 	buffer.AppendByte(LeftSep)
 	buffer.AppendString(p.Category)
 	buffer.AppendByte(RightSep)
@@ -40,11 +46,6 @@ func (p *Category) serializeToBuffer(buffer *ez_buffer.Buffer) {
 
 	buffer.AppendByte(LeftSep)
 	buffer.AppendString(p.SubCategory)
-	buffer.AppendByte(RightSep)
-	buffer.AppendByte(SpaceSep)
-
-	buffer.AppendByte(LeftSep)
-	buffer.AppendString(p.Module)
 	buffer.AppendByte(RightSep)
 	buffer.AppendByte(SpaceSep)
 
