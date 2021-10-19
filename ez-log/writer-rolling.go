@@ -1,6 +1,3 @@
-package ez_log
-// this file copy from github.com/natefinch/lumberjack:v2 (MIT)
-
 // Package lumberjack provides a rolling logger.
 //
 // Note that this is v2.0 of lumberjack, and should be imported using gopkg.in
@@ -22,7 +19,7 @@ package ez_log
 // Lumberjack assumes that only one process is writing to the output files.
 // Using the same lumberjack configuration from multiple processes on the same
 // machine will result in improper behavior.
-
+package ez_log
 
 import (
 	"compress/gzip"
@@ -47,6 +44,16 @@ const (
 // ensure we always implement io.WriteCloser
 var _ WriteSyncer = (*lumberjackWriter)(nil)
 
+func NewRollingWriteSyncer(filename string) WriteSyncer {
+	return NewLumberjackWriter(&LumberjackWriterConfig{
+		Filename:   filename,
+		MaxSize:    20,
+		MaxAge:     7,
+		MaxBackups: 16,
+		LocalTime:  true,
+		Compress:   false,
+	})
+}
 func NewLumberjackWriter(config *LumberjackWriterConfig) WriteSyncer {
 	return &lumberjackWriter{
 		Filename:   config.Filename,
@@ -65,7 +72,7 @@ type LumberjackWriterConfig struct {
 	Filename string `json:"filename" yaml:"filename"`
 
 	// MaxSize is the maximum size in megabytes of the log file before it gets
-	// rotated. It defaults to 100 megabytes.
+	// rotated (unit: mb). It defaults to 100 megabytes.
 	MaxSize int `json:"maxsize" yaml:"maxsize"`
 
 	// MaxAge is the maximum number of days to retain old log files based on the
