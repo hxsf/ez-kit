@@ -469,7 +469,23 @@ type errorStringField struct {
 	value error
 }
 
+type nilErrorField struct{}
+
+const nilString = "<nil>"
+
+func (f *nilErrorField) WriteTo(w io.Writer) (n int64, err error) {
+	nn, err := w.Write([]byte(nilString))
+	return int64(nn), err
+}
+
+func (f *nilErrorField) ByteLength() int {
+	return len(nilString)
+}
+
 func Error(value error) Field {
+	if value == nil {
+		return &nilErrorField{}
+	}
 	return &errorStringField{value: value}
 }
 
