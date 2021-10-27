@@ -557,7 +557,7 @@ type reflectField struct {
 }
 
 func Reflect(value interface{}) Field {
-	return &reflectField{value: value}
+	return &reflectField{value: value, _len: -1}
 }
 
 func (f *reflectField) cache() {
